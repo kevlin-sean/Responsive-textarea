@@ -1,0 +1,30 @@
+{
+  "compilerOptions": {
+    "target": "es2020" /* Compile to ECMAScript 2020 */,
+    "lib": [
+      "dom",
+      "dom.iterable",
+      "esnext"
+    ] /* Include DOM and latest ES features */,
+    "allowJs": false /* Disallow JavaScript files */,
+    "skipLibCheck": true /* Skip type checking of declaration files */,
+    "esModuleInterop": true /* Allow default imports from CommonJS modules */,
+    "allowSyntheticDefaultImports": true /* Allow synthetic default imports */,
+    "strict": true /* Enable all strict type-checking options */,
+    "forceConsistentCasingInFileNames": true /* Ensure consistent casing in file names */,
+    "noFallthroughCasesInSwitch": true /* Prevent fall-through cases in switch statements */,
+    "module": "esnext" /* Specify module code generation: ES Modules */,
+    "moduleResolution": "node" /* Specify module resolution strategy: Node.js */,
+    "resolveJsonModule": true /* Allow importing .json files */,
+    "isolatedModules": true /* Ensure each file can be compiled independently */,
+    "jsx": "react-jsx" /* Support React JSX syntax */,
+    "declaration": true /* Generate .d.ts declaration files */,
+    "outDir": "./dist" /* Output directory for compiled files and types */,
+    "baseUrl": "./src" /* Base directory for resolving non-relative module names */
+  },
+  "include": ["src"] /* Include all files under the src directory */,
+  "exclude": [
+    "node_modules",
+    "dist"
+  ] /* Exclude node_modules and dist directories */
+}
