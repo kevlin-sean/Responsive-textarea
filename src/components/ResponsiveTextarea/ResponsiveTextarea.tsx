@@ -80,26 +80,32 @@ const ResponsiveTextarea: React.FC<ResponsiveTextareaProps> = ({
     }
   };
 
-  // Core logic: Adjusts textarea height based on content and screen size.
-  // This mainly applies to mobile for auto-sizing; PC height is fixed by CSS.
+  const isPcView = useCallback(() => {
+    // 匹配 CSS 中定义的 PC 端断点 (min-width: 768px)
+    // 确保这里的断点与你的 ResponsiveTextarea.module.css 中的 @media 规则一致
+    return window.matchMedia("(min-width: 768px)").matches;
+  }, []);
+
   const adjustTextareaHeight = useCallback(() => {
     const textarea = textareaRef.current;
     if (textarea) {
-      // Important: Reset height to 'auto' first to ensure correct scrollHeight calculation
-      textarea.style.height = "auto";
-      // Then set its height to the content's scroll height to fit content
-      textarea.style.height = `${textarea.scrollHeight}px`;
+      // 只有当不是 PC 视图时，才让 JS 调整高度以实现自适应
+      if (!isPcView()) {
+        // <--- 关键判断
+        textarea.style.height = "auto"; // 先重置，才能正确计算 scrollHeight
+        textarea.style.height = `${textarea.scrollHeight}px`; // 设置为实际内容高度
+      } else {
+        // 如果是 PC 视图，确保移除 JS 设置的行内 height，让 CSS 接管
+        textarea.style.height = ""; // 清除行内 height 样式
+      }
     }
-  }, []); // useCallback ensures this function reference is stable
+  }, [isPcView]); // 依赖项：isPcView 函数
 
-  // Effect 1: Adjust textarea height when `value` changes (primarily for mobile auto-sizing)
   useEffect(() => {
     adjustTextareaHeight();
-  }, [value, adjustTextareaHeight]); // Dependencies: value change and adjustTextareaHeight function
+  }, [value, adjustTextareaHeight]);
 
-  // Effect 2: Listen for window resize events and recalculate height
   useEffect(() => {
-    // Debounce the resize event handler to prevent excessive calls
     const debouncedAdjustHeight = debounce(
       adjustTextareaHeight,
       resizeDebounceDelay
@@ -107,25 +113,18 @@ const ResponsiveTextarea: React.FC<ResponsiveTextareaProps> = ({
 
     window.addEventListener("resize", debouncedAdjustHeight);
 
-    // Cleanup function: Remove event listener when component unmounts to prevent memory leaks
+    // 监听匹配媒体查询的变化，当从移动端切换到PC端或反之时立即调整
+    const mediaQueryList = window.matchMedia("(min-width: 768px)");
+    const handleMediaQueryChange = () => {
+      debouncedAdjustHeight();
+    };
+    mediaQueryList.addEventListener("change", handleMediaQueryChange);
+
     return () => {
       window.removeEventListener("resize", debouncedAdjustHeight);
+      mediaQueryList.removeEventListener("change", handleMediaQueryChange); // 清理
     };
-  }, [adjustTextareaHeight, resizeDebounceDelay]); // Dependencies: function reference and debounce delay
-
-  // Effect 3: Dynamically set CSS variables via JavaScript, allowing CSS to respond to component props
-  useEffect(() => {
-    const textarea = textareaRef.current;
-    if (textarea) {
-      // Set CSS variable for PC fixed height
-      textarea.style.setProperty("--rt-pc-height", pcHeight);
-      // Set CSS variable for mobile minimum rows
-      textarea.style.setProperty(
-        "--rt-mobile-min-rows",
-        mobileMinRows.toString()
-      );
-    }
-  }, [pcHeight, mobileMinRows]); // Dependencies: PC height and mobile min rows
+  }, [adjustTextareaHeight, resizeDebounceDelay]);
 
   return (
     <textarea

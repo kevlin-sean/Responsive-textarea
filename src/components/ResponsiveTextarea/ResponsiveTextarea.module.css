@@ -32,10 +32,10 @@
 /* --- PC-specific styles (using media query) --- */
 /* Apply these styles when screen width is 768px or wider (common desktop/large tablet breakpoint) */
 @media (min-width: 768px) {
-  .responsiveTextarea {
-    /* Use CSS variable for fixed height on PC, show internal scrollbar for overflow */
+  textarea.responsiveTextarea {
+    /* 提升优先级：元素选择器 + 类选择器 */
     height: var(--rt-pc-height, 150px);
-    overflow-y: auto; /* Show internal scrollbar when content overflows on PC */
-    resize: vertical; /* Allow vertical resizing on PC for flexibility */
+    overflow-y: auto;
+    resize: vertical;
   }
 }
