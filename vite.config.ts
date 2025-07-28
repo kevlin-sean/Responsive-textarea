@@ -1,38 +1,38 @@
 import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react";
-import { resolve } from "path"; // Node.js 'path' module for absolute paths
-import dts from "vite-plugin-dts"; // Plugin to generate TypeScript declaration files
+import { resolve } from "path";
+import dts from "vite-plugin-dts";
 
 export default defineConfig({
   plugins: [
-    react(), // Vite plugin for React applications
+    react(),
     dts({
-      insertTypesEntry: true, // Will create an entry .d.ts file for types
-      // outputPath: 'dist/types', // Optional: specify output path for types (defaults to build.outDir)
+      insertTypesEntry: true,
+      // outputPath: 'dist/types', // Optional
     }),
   ],
   build: {
-    // Configure library mode for building a component library
     lib: {
-      entry: resolve(__dirname, "src/index.ts"), // Entry point for your library
-      name: "ResponsiveTextarea", // Global name for UMD build (e.g., window.ResponsiveTextarea)
-      formats: ["es", "cjs", "umd"], // Output formats: ES Module, CommonJS, UMD
-      fileName: (format) => `responsive-textarea.${format}.js`, // Naming convention for output files
+      entry: resolve(__dirname, "src/index.ts"),
+      name: "ResponsiveTextarea",
+      formats: ["es", "cjs", "umd"],
+      fileName: (format) => `responsive-textarea.${format}.js`,
     },
-    // Rollup options for fine-grained control over the build process
     rollupOptions: {
-      // Ensure that 'react' and 'react-dom' are externalized (not bundled into the library)
-      // They are peer dependencies and should be provided by the consuming application
-      external: ["react", "react-dom"],
+      // 确保外部化处理那些你不想打包进库的依赖
+      external: ["react", "react-dom", "react/jsx-runtime"], // <-- Add 'react/jsx-runtime' here
       output: {
-        // Provide global variables for externalized dependencies in UMD build mode
+        // 在 UMD 构建模式下为这些外部化的依赖提供一个全局变量
         globals: {
           react: "React",
           "react-dom": "ReactDOM",
+          "react/jsx-runtime": "ReactJSXRuntime", // You might need to add a global name for this,
+          // though for 'es' and 'cjs' it's less critical.
+          // It's good practice for UMD.
         },
       },
     },
-    cssCodeSplit: true, // Ensures CSS is extracted into separate files for the library build
-    outDir: "dist", // Output directory for the built files
+    cssCodeSplit: true,
+    outDir: "dist",
   },
 });
