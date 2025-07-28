@@ -30,6 +30,14 @@
     "react": "^18.2.0",
     "react-dom": "^18.2.0"
   },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/kevlin-sean/Responsive-textarea.git"
+  },
+  "bugs": {
+    "url": "https://github.com/kevlin-sean/Responsive-textarea/issues"
+  },
+  "homepage": "https://github.com/kevlin-sean/Responsive-textarea#readme",
   "devDependencies": {
     "@types/node": "^24.1.0",
     "@types/react": "^18.2.66",
