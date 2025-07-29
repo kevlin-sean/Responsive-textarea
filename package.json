@@ -1,6 +1,6 @@
 {
   "name": "responsive-textarea",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "description": "A responsive textarea React component that has fixed height with internal scrolling on PC, and auto-adjusts height with page scrolling on mobile, built with Vite.",
   "main": "dist/responsive-textarea.umd.js",
   "module": "dist/responsive-textarea.es.js",
