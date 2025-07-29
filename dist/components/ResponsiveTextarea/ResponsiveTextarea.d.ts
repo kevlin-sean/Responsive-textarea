@@ -1,4 +1,4 @@
-import { default as React } from 'react';
+import { default as React, CSSProperties } from 'react';
 
 /**
  * Props interface for the ResponsiveTextarea component.
@@ -39,10 +39,25 @@ export interface ResponsiveTextareaProps {
      * @default 100
      */
     resizeDebounceDelay?: number;
+    /**
+     * Custom breakpoint (in pixels) for switching between PC and mobile layouts.
+     * @default 768
+     */
+    breakpoint?: number;
+    /**
+     * Disables the textarea if set to true.
+     * @default false
+     */
+    disabled?: boolean;
+    /**
+     * Inline style object for custom styling.
+     * @default {}
+     */
+    style?: CSSProperties;
 }
 /**
  * A responsive textarea component that has fixed height with internal scrolling on PC,
  * and auto-adjusts height with page scrolling on mobile.
  */
-declare const ResponsiveTextarea: React.FC<ResponsiveTextareaProps>;
+declare const ResponsiveTextarea: React.ForwardRefExoticComponent<ResponsiveTextareaProps & React.RefAttributes<HTMLTextAreaElement>>;
 export default ResponsiveTextarea;

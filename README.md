@@ -88,6 +88,7 @@ export default MyAwesomeForm;
 | resizeDebounceDelay | number                  | 100             | Debounce delay (ms) for resize events to optimize performance. |
 | ref                 | HTMLTextAreaElement     | null            | Textarea ref, used for focus or other operations.              |
 | disabled            | boolean                 | false           | Disables the textarea if set to true.                          |
+| style               | CSSProperties           | {}              | Inline style object for custom styling.                        |
 
 ### 🎨 Customization
 
@@ -192,13 +193,11 @@ export default MyAwesomeForm;
 | resizeDebounceDelay | number                  | 100             | 页面或容器 resize 事件的防抖延迟（毫秒），用于优化性能。  |
 | ref                 | HTMLTextAreaElement     | null            | 文本输入框的 ref，用于获取焦点或其他操作。                |
 | disabled            | boolean                 | false           | 禁用文本输入框，当设置为 true 时，用户不能输入内容。      |
+| style               | CSSProperties           | {}              | 内联样式对象，用于自定义样式。                            |
 
 ### 🎨 样式定制
 
 - 使用 `className prop`: 传入你自己的 `CSS` 类名，可以直接覆盖或扩展组件的样式。
-- 覆盖 CSS 变量:
-  - `--rt-pc-height`: 控制 PC 端固定高度。
-  - `--rt-mobile-min-rows`: 控制移动端最小行数。
 - 如果需要更深度的定制，你可能需要检查打包后生成的 `CSS` 文件，并使用更具体的选择器来覆盖样式。
 
 ### 🤝 贡献
