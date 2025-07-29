@@ -81,6 +81,7 @@ export default MyAwesomeForm;
 | mobileMinRows       | number                  | 3               | Minimum rows for mobile, used to calculate minimum height.     |
 | className           | string                  | ''              | Extra CSS class name for custom styling.                       |
 | resizeDebounceDelay | number                  | 100             | Debounce delay (ms) for resize events to optimize performance. |
+| ref                 | HTMLTextAreaElement     | null            | Textarea ref, used for focus or other operations.              |
 
 ### 🎨 Customization
 
