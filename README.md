@@ -31,11 +31,11 @@ pnpm add responsive-textarea
 ### 📖 Usage
 
 ```tsx
-import React, { useState } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import {
   ResponsiveTextarea,
   ResponsiveTextareaProps,
-} from "responsive-textarea-vite";
+} from "responsive-textarea"; // 导入你的组件和类型
 
 function MyAwesomeForm() {
   const [description, setDescription] = useState("");
@@ -44,18 +44,25 @@ function MyAwesomeForm() {
     setDescription(newValue);
   };
 
+  const textareaRef = useRef<HTMLTextAreaElement>(null);
+
+  useEffect(() => {
+    textareaRef.current?.focus();
+  }, []);
+
   return (
     <div style={{ padding: "20px", maxWidth: "800px", margin: "0 auto" }}>
-      <h1>Product Description</h1>
+      <h1>产品描述</h1>
       <ResponsiveTextarea
-        placeholder="Enter detailed product description..."
+        ref={textareaRef}
+        placeholder="请输入详细的产品描述..."
         initialValue={description}
         onChange={handleDescriptionChange}
         pcHeight="250px"
         mobileMinRows={6}
         className="my-custom-textarea-style"
       />
-      <p>Current character count: {description.length}</p>
+      <p>当前描述字数: {description.length}</p>
     </div>
   );
 }
@@ -120,11 +127,11 @@ pnpm add responsive-textarea
 ### 📖 使用方式
 
 ```tsx
-import React, { useState } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import {
   ResponsiveTextarea,
   ResponsiveTextareaProps,
-} from "responsive-textarea-vite"; // 导入你的组件和类型
+} from "responsive-textarea; // 导入你的组件和类型
 
 function MyAwesomeForm() {
   const [description, setDescription] = useState("");
@@ -133,10 +140,17 @@ function MyAwesomeForm() {
     setDescription(newValue);
   };
 
+  const textareaRef = useRef<HTMLTextAreaElement>(null);
+
+  useEffect(() => {
+    textareaRef.current?.focus();
+  }, []);
+
   return (
     <div style={{ padding: "20px", maxWidth: "800px", margin: "0 auto" }}>
       <h1>产品描述</h1>
       <ResponsiveTextarea
+        ref={textareaRef}
         placeholder="请输入详细的产品描述..."
         initialValue={description}
         onChange={handleDescriptionChange}
@@ -163,6 +177,7 @@ export default MyAwesomeForm;
 | mobileMinRows       | number                  | 3               | 移动端文本输入框的最小行数，用于计算其最小高度。          |
 | className           | string                  | ''              | 额外的 CSS 类名，允许你通过外部 CSS 文件自定义样式。      |
 | resizeDebounceDelay | number                  | 100             | 页面或容器 resize 事件的防抖延迟（毫秒），用于优化性能。  |
+| ref                 | HTMLTextAreaElement     | null            | 文本输入框的 ref，用于获取焦点或其他操作。                |
 
 ### 🎨 样式定制
 

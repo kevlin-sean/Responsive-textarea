@@ -1,4 +1,10 @@
-import React, { useState, useEffect, useRef, useCallback } from "react";
+import React, {
+  useState,
+  useEffect,
+  useRef,
+  useCallback,
+  forwardRef,
+} from "react";
 import styles from "./ResponsiveTextarea.module.css"; // Import CSS Modules
 
 // Simple debounce function to limit function call frequency
@@ -53,90 +59,129 @@ export interface ResponsiveTextareaProps {
    * @default 100
    */
   resizeDebounceDelay?: number;
+  /**
+   * Custom breakpoint (in pixels) for switching between PC and mobile layouts.
+   * @default 768
+   */
+  breakpoint?: number; // <-- 新增 breakpoint prop
 }
 
 /**
  * A responsive textarea component that has fixed height with internal scrolling on PC,
  * and auto-adjusts height with page scrolling on mobile.
  */
-const ResponsiveTextarea: React.FC<ResponsiveTextareaProps> = ({
-  placeholder = "请输入内容...",
-  initialValue = "",
-  onChange,
-  pcHeight = "150px",
-  mobileMinRows = 3,
-  className = "",
-  resizeDebounceDelay = 100,
-}) => {
-  const [value, setValue] = useState(initialValue);
-  const textareaRef = useRef<HTMLTextAreaElement>(null);
+const ResponsiveTextarea = forwardRef<
+  HTMLTextAreaElement,
+  ResponsiveTextareaProps
+>(
+  (
+    {
+      placeholder = "请输入内容...",
+      initialValue = "",
+      onChange,
+      pcHeight = "150px",
+      mobileMinRows = 3,
+      className = "",
+      resizeDebounceDelay = 100,
+      breakpoint = 768, // <-- 使用默认值
+    },
+    ref // forwardRef 会将 ref 作为第二个参数传递
+  ) => {
+    const [value, setValue] = useState(initialValue);
+    const internalRef = useRef<HTMLTextAreaElement | null>(null);
 
-  // Handles input changes, updates internal state, and calls external onChange callback
-  const handleChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
-    const newValue = event.target.value;
-    setValue(newValue);
-    if (onChange) {
-      onChange(newValue);
-    }
-  };
+    const combinedRef = useCallback(
+      (node: HTMLTextAreaElement | null) => {
+        internalRef.current = node;
 
-  const isPcView = useCallback(() => {
-    // 匹配 CSS 中定义的 PC 端断点 (min-width: 768px)
-    // 确保这里的断点与你的 ResponsiveTextarea.module.css 中的 @media 规则一致
-    return window.matchMedia("(min-width: 768px)").matches;
-  }, []);
-
-  const adjustTextareaHeight = useCallback(() => {
-    const textarea = textareaRef.current;
-    if (textarea) {
-      // 只有当不是 PC 视图时，才让 JS 调整高度以实现自适应
-      if (!isPcView()) {
-        // <--- 关键判断
-        textarea.style.height = "auto"; // 先重置，才能正确计算 scrollHeight
-        textarea.style.height = `${textarea.scrollHeight}px`; // 设置为实际内容高度
-      } else {
-        // 如果是 PC 视图，确保移除 JS 设置的行内 height，让 CSS 接管
-        textarea.style.height = ""; // 清除行内 height 样式
-      }
-    }
-  }, [isPcView]); // 依赖项：isPcView 函数
-
-  useEffect(() => {
-    adjustTextareaHeight();
-  }, [value, adjustTextareaHeight]);
-
-  useEffect(() => {
-    const debouncedAdjustHeight = debounce(
-      adjustTextareaHeight,
-      resizeDebounceDelay
+        if (typeof ref === "function") {
+          ref(node);
+        } else if (ref) {
+          (ref as React.MutableRefObject<HTMLTextAreaElement | null>).current =
+            node;
+        }
+      },
+      [ref]
     );
 
-    window.addEventListener("resize", debouncedAdjustHeight);
-
-    // 监听匹配媒体查询的变化，当从移动端切换到PC端或反之时立即调整
-    const mediaQueryList = window.matchMedia("(min-width: 768px)");
-    const handleMediaQueryChange = () => {
-      debouncedAdjustHeight();
+    const handleChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
+      const newValue = event.target.value;
+      setValue(newValue);
+      if (onChange) {
+        onChange(newValue);
+      }
     };
-    mediaQueryList.addEventListener("change", handleMediaQueryChange);
 
-    return () => {
-      window.removeEventListener("resize", debouncedAdjustHeight);
-      mediaQueryList.removeEventListener("change", handleMediaQueryChange); // 清理
-    };
-  }, [adjustTextareaHeight, resizeDebounceDelay]);
+    // 使用 breakpoint prop 来判断是否为 PC 视图
+    const isPcView = useCallback(() => {
+      return window.matchMedia(`(min-width: ${breakpoint}px)`).matches; // <-- 使用 breakpoint
+    }, [breakpoint]); // <-- 依赖 breakpoint
 
-  return (
-    <textarea
-      ref={textareaRef}
-      // Combine internal CSS Modules class name with external class name
-      className={`${styles.responsiveTextarea} ${className}`}
-      placeholder={placeholder}
-      value={value}
-      onChange={handleChange}
-      rows={mobileMinRows} // `rows` attribute serves as an HTML hint, actual height controlled by JS/CSS
-    />
-  );
-};
+    const adjustTextareaHeight = useCallback(() => {
+      const textarea = internalRef.current;
+      if (textarea) {
+        if (!isPcView()) {
+          textarea.style.height = "auto";
+          textarea.style.height = `${textarea.scrollHeight}px`;
+        } else {
+          textarea.style.height = "";
+        }
+      }
+    }, [isPcView]);
+
+    useEffect(() => {
+      adjustTextareaHeight();
+    }, [value, adjustTextareaHeight]);
+
+    useEffect(() => {
+      const debouncedAdjustHeight = debounce(
+        adjustTextareaHeight,
+        resizeDebounceDelay
+      );
+
+      window.addEventListener("resize", debouncedAdjustHeight);
+
+      // 监听匹配媒体查询的变化，当断点改变时，旧的监听器需要被移除，新的需要被添加
+      // 这里的媒体查询字符串依赖于 breakpoint
+      const mediaQueryList = window.matchMedia(`(min-width: ${breakpoint}px)`); // <-- 使用 breakpoint
+      const handleMediaQueryChange = () => {
+        debouncedAdjustHeight();
+      };
+      mediaQueryList.addEventListener("change", handleMediaQueryChange);
+
+      return () => {
+        window.removeEventListener("resize", debouncedAdjustHeight);
+        mediaQueryList.removeEventListener("change", handleMediaQueryChange);
+      };
+    }, [adjustTextareaHeight, resizeDebounceDelay, breakpoint]); // <-- 依赖 breakpoint
+
+    // Effect: Set CSS variables for flexible styling via props
+    useEffect(() => {
+      const textarea = internalRef.current;
+      if (textarea) {
+        textarea.style.setProperty("--rt-pc-height", pcHeight);
+        textarea.style.setProperty(
+          "--rt-mobile-min-rows",
+          String(mobileMinRows)
+        );
+        // 将 breakpoint 设置为 CSS 变量，以便 CSS Modules 能够使用
+        textarea.style.setProperty("--rt-breakpoint", `${breakpoint}px`); // <-- 新增 CSS 变量
+      }
+    }, [pcHeight, mobileMinRows, breakpoint]); // <-- 依赖 breakpoint
+
+    return (
+      <textarea
+        ref={combinedRef}
+        className={`${styles.responsiveTextarea} ${className}`}
+        placeholder={placeholder}
+        value={value}
+        onChange={handleChange}
+        rows={mobileMinRows}
+      />
+    );
+  }
+);
+
+ResponsiveTextarea.displayName = "ResponsiveTextarea";
 
 export default ResponsiveTextarea;

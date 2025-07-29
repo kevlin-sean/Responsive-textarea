@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import ResponsiveTextarea from "./components/ResponsiveTextarea/ResponsiveTextarea"; // 注意路径，直接从组件源文件导入
 
 function App() {
@@ -9,6 +9,12 @@ function App() {
   const handleMessageChange = (newMessage: string) => {
     setMessage(newMessage);
   };
+
+  const textareaRef = useRef<HTMLTextAreaElement>(null);
+
+  useEffect(() => {
+    textareaRef.current?.focus();
+  }, []);
 
   return (
     <div
@@ -30,11 +36,13 @@ function App() {
           测试输入框:
         </label>
         <ResponsiveTextarea
+          ref={textareaRef}
           placeholder="开始输入..."
           initialValue={message}
           onChange={handleMessageChange}
           pcHeight="400px" // 调试时可以随意调整
           mobileMinRows={6}
+          breakpoint={768}
           resizeDebounceDelay={50} // 调试时可以调整防抖延迟
         />
       </div>
