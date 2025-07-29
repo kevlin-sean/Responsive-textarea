@@ -64,6 +64,11 @@ export interface ResponsiveTextareaProps {
    * @default 768
    */
   breakpoint?: number; // <-- 新增 breakpoint prop
+  /**
+   * Disables the textarea if set to true.
+   * @default false
+   */
+  disabled?: boolean;
 }
 
 /**
@@ -84,6 +89,7 @@ const ResponsiveTextarea = forwardRef<
       className = "",
       resizeDebounceDelay = 100,
       breakpoint = 768, // <-- 使用默认值
+      disabled = false,
     },
     ref // forwardRef 会将 ref 作为第二个参数传递
   ) => {
@@ -177,6 +183,7 @@ const ResponsiveTextarea = forwardRef<
         value={value}
         onChange={handleChange}
         rows={mobileMinRows}
+        disabled={disabled}
       />
     );
   }

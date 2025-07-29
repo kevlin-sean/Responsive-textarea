@@ -39,6 +39,7 @@ import {
 
 function MyAwesomeForm() {
   const [description, setDescription] = useState("");
+  const [disabled, setDisabled] = useState(false);
 
   const handleDescriptionChange = (newValue: string) => {
     setDescription(newValue);
@@ -53,6 +54,9 @@ function MyAwesomeForm() {
   return (
     <div style={{ padding: "20px", maxWidth: "800px", margin: "0 auto" }}>
       <h1>产品描述</h1>
+      <button onClick={() => setDisabled(!disabled)}>
+        {disabled ? "启用" : "禁用"}
+      </button>
       <ResponsiveTextarea
         ref={textareaRef}
         placeholder="请输入详细的产品描述..."
@@ -61,6 +65,7 @@ function MyAwesomeForm() {
         pcHeight="250px"
         mobileMinRows={6}
         className="my-custom-textarea-style"
+        disabled={disabled}
       />
       <p>当前描述字数: {description.length}</p>
     </div>
@@ -82,6 +87,7 @@ export default MyAwesomeForm;
 | className           | string                  | ''              | Extra CSS class name for custom styling.                       |
 | resizeDebounceDelay | number                  | 100             | Debounce delay (ms) for resize events to optimize performance. |
 | ref                 | HTMLTextAreaElement     | null            | Textarea ref, used for focus or other operations.              |
+| disabled            | boolean                 | false           | Disables the textarea if set to true.                          |
 
 ### 🎨 Customization
 
@@ -137,6 +143,8 @@ import {
 function MyAwesomeForm() {
   const [description, setDescription] = useState("");
 
+  const [disabled, setDisabled] = useState(false);
+
   const handleDescriptionChange = (newValue: string) => {
     setDescription(newValue);
   };
@@ -150,6 +158,9 @@ function MyAwesomeForm() {
   return (
     <div style={{ padding: "20px", maxWidth: "800px", margin: "0 auto" }}>
       <h1>产品描述</h1>
+      <button onClick={() => setDisabled(!disabled)}>
+        {disabled ? "启用" : "禁用"}
+      </button>
       <ResponsiveTextarea
         ref={textareaRef}
         placeholder="请输入详细的产品描述..."
@@ -158,6 +169,7 @@ function MyAwesomeForm() {
         pcHeight="250px"
         mobileMinRows={6}
         className="my-custom-textarea-style"
+        disabled={disabled}`
       />
       <p>当前描述字数: {description.length}</p>
     </div>
@@ -179,6 +191,7 @@ export default MyAwesomeForm;
 | className           | string                  | ''              | 额外的 CSS 类名，允许你通过外部 CSS 文件自定义样式。      |
 | resizeDebounceDelay | number                  | 100             | 页面或容器 resize 事件的防抖延迟（毫秒），用于优化性能。  |
 | ref                 | HTMLTextAreaElement     | null            | 文本输入框的 ref，用于获取焦点或其他操作。                |
+| disabled            | boolean                 | false           | 禁用文本输入框，当设置为 true 时，用户不能输入内容。      |
 
 ### 🎨 样式定制
 

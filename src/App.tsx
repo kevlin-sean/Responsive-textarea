@@ -6,6 +6,8 @@ function App() {
     "这是默认文本，你可以尝试输入更多内容或在不同设备上调整窗口大小。\n\nPC端：高度固定，内部滚动。\n移动端：高度自适应，页面滚动。"
   );
 
+  const [disabled, setDisabled] = useState(false);
+
   const handleMessageChange = (newMessage: string) => {
     setMessage(newMessage);
   };
@@ -35,6 +37,16 @@ function App() {
         >
           测试输入框:
         </label>
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "center",
+          }}
+        >
+          <button onClick={() => setDisabled(!disabled)}>
+            {disabled ? "启用" : "禁用"}
+          </button>
+        </div>
         <ResponsiveTextarea
           ref={textareaRef}
           placeholder="开始输入..."
@@ -44,6 +56,7 @@ function App() {
           mobileMinRows={6}
           breakpoint={768}
           resizeDebounceDelay={50} // 调试时可以调整防抖延迟
+          disabled={disabled}
         />
       </div>
 
