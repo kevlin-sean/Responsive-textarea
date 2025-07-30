@@ -68,8 +68,6 @@ const P = (a, c) => {
           boxSizing: "border-box",
           lineHeight: "1.5",
           // Crucial for scrollHeight consistency
-          verticalAlign: "top",
-          // Prevents extra space below textarea
           // Merge external style prop last to allow it to override internal styles
           ...p
         }
