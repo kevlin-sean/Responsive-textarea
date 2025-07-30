@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 // Import your ResponsiveTextarea component from the installed package name
 import { ResponsiveTextarea } from "responsive-textarea";
 
@@ -51,7 +51,7 @@ function App() {
     "这是一个响应式文本输入框的演示。\n\n在PC端，它将保持固定高度并内部滚动。\n在移动端，它将自动调整高度并与页面一起滚动。\n\n尝试输入更多内容，并改变浏览器窗口大小来观察它的行为。"
   );
   const [value2, setValue2] = useState("");
-  const [value3, setValue3] = useState("这个是禁用状态的输入框。");
+  const [value3] = useState("这个是禁用状态的输入框。");
 
   return (
     <div style={demoPageStyles.container}>
