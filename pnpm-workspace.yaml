@@ -1,0 +1,4 @@
+# responsive-textarea/pnpm-workspace.yaml
+packages:
+  - "packages/*" # 你的组件库将放在这里
+  - "apps/*" # 你的 demo 应用将放在这里

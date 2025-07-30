@@ -10,7 +10,7 @@
   "dependencies": {
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
-    "responsive-textarea": "^1.0.5"
+    "responsive-textarea": "workspace:*"
   },
   "devDependencies": {
     "@types/react": "^18.2.66",

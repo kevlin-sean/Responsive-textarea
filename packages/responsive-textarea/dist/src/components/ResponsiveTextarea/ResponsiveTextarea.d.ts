@@ -61,3 +61,4 @@ export interface ResponsiveTextareaProps {
  */
 declare const ResponsiveTextarea: React.ForwardRefExoticComponent<ResponsiveTextareaProps & React.RefAttributes<HTMLTextAreaElement>>;
 export default ResponsiveTextarea;
+//# sourceMappingURL=ResponsiveTextarea.d.ts.map

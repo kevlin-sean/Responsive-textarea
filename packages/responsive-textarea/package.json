@@ -1,0 +1,50 @@
+{
+  "name": "responsive-textarea",
+  "version": "1.0.5",
+  "description": "A responsive textarea React component that has fixed height with internal scrolling on PC, and auto-adjusts height with page scrolling on mobile, built with Vite.",
+  "main": "dist/responsive-textarea.umd.js",
+  "module": "dist/responsive-textarea.es.js",
+  "types": "dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc && vite build",
+    "prepare": "npm run build"
+  },
+  "keywords": [
+    "react",
+    "textarea",
+    "responsive",
+    "scroll",
+    "typescript",
+    "component",
+    "mobile",
+    "pc",
+    "vite"
+  ],
+  "author": "你的名字 <你的邮箱@example.com>",
+  "license": "MIT",
+  "peerDependencies": {
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/kevlin-sean/Responsive-textarea.git"
+  },
+  "bugs": {
+    "url": "https://github.com/kevlin-sean/Responsive-textarea/issues"
+  },
+  "homepage": "https://github.com/kevlin-sean/Responsive-textarea#readme",
+  "devDependencies": {
+    "@types/node": "^24.1.0",
+    "@types/react": "^18.2.66",
+    "@types/react-dom": "^18.2.22",
+    "@vitejs/plugin-react": "^4.3.1",
+    "typescript": "^5.4.5",
+    "vite": "^5.3.3",
+    "vite-plugin-dts": "^3.9.1"
+  }
+}
