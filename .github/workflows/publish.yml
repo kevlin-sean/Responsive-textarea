@@ -31,7 +31,9 @@ jobs:
           cache: "pnpm" # Use pnpm as the cache manager
 
       - name: Install pnpm
-        run: npm install -g pnpm@latest # Ensure pnpm is installed globally in the runner
+        run: |
+          corepack enable 
+          corepack prepare pnpm@9.0.6 --activate
 
       - name: Install monorepo dependencies
         run: pnpm install --frozen-lockfile # Use pnpm to install monorepo dependencies

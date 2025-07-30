@@ -29,7 +29,9 @@ jobs:
           cache-dependency-path: "**/pnpm-lock.yaml" # ⚡️ 关键: pnpm 的锁文件路径
 
       - name: Install pnpm
-        run: npm install -g pnpm@latest # ⚡️ 关键: 在运行器中全局安装 pnpm
+        run: |
+          corepack enable 
+          corepack prepare pnpm@9.0.6 --activate
 
       - name: Install monorepo dependencies
         # ⚡️ 关键: 在 monorepo 根目录安装所有包的依赖
