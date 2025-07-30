@@ -28,7 +28,6 @@ jobs:
         with:
           node-version: "20.x" # Recommended LTS version
           registry-url: "https://registry.npmjs.org/" # Points to the npmjs registry
-          cache: "pnpm" # Use pnpm as the cache manager
 
       - name: Install pnpm
         run: |
