@@ -1,52 +1,54 @@
+# .github/workflows/publish-to-npmjs.yml
 name: Publish Package to npmjs
 
-# 当满足以下条件时触发此工作流：
 on:
   release:
-    types: [published] # 当你在 GitHub 上发布一个新 Release 时
-  workflow_dispatch: # 允许手动从 GitHub Actions 页面触发工作流
+    types: [published] # Triggers when you publish a new Release on GitHub
+  workflow_dispatch: # Allows manual triggering from the GitHub Actions page
     inputs:
       version:
         description: "Specify the version to publish (e.g., 1.0.0). Leave blank to auto-detect from package.json"
         required: false
         type: string
 
-# 定义工作流中的任务
 jobs:
   build_and_publish:
-    runs-on: ubuntu-latest # 在最新的 Ubuntu 运行器上执行任务
+    runs-on: ubuntu-latest # Executes tasks on the latest Ubuntu runner
 
-    # 权限配置：
-    # `contents: read` 允许 Actions 读取仓库内容
-    # `id-token: write` 启用 OIDC，对于需要 npm >= 9.5.0 并希望添加 provenance 很有用
     permissions:
-      contents: read
-      id-token: write
+      contents: read # Allows Actions to read the repository content
+      id-token: write # Enables OIDC, useful for npm >= 9.5.0 and adding provenance
 
     steps:
-      # 1. 检出代码
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      # 2. 设置 Node.js 环境
       - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: "20.x" # 推荐使用最新的 LTS 版本
-          registry-url: "https://registry.npmjs.org/" # 指向 npmjs 注册表
+          node-version: "20.x" # Recommended LTS version
+          registry-url: "https://registry.npmjs.org/" # Points to the npmjs registry
+          cache: "pnpm" # Use pnpm as the cache manager
 
-      # 3. 安装依赖
-      - name: Install dependencies
-        run: npm install --legacy-peer-deps # 或者 'pnpm install' / 'yarn install --frozen-lockfile'
+      - name: Install pnpm
+        run: npm install -g pnpm@latest # Ensure pnpm is installed globally in the runner
+
+      - name: Install monorepo dependencies
+        run: pnpm install --frozen-lockfile # Use pnpm to install monorepo dependencies
+        # NODE_AUTH_TOKEN is usually not needed for npm install unless you have private packages
+        # in your dependency tree, which is less common for an open-source library.
+        # env:
+        #   NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+
+      # Build the specific component library package
+      - name: Build responsive-textarea package
+        # Navigate to the package and run its build script
+        run: pnpm --filter responsive-textarea build
+
+      # Publish to npmjs
+      - name: Publish responsive-textarea to npmjs
+        # Navigate to the built package directory and publish
+        run: cd packages/responsive-textarea && npm publish --access public
         env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }} # 确保在安装私有 peerDeps 时有认证
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }} # Use the npm token for authentication
 
-      # 4. 构建组件库
-      - name: Build package
-        run: npm run build # 执行你在 package.json 中定义的构建脚本
-
-      # 5. 发布到 npm
-      - name: Publish to npm
-        run: npm publish --access public # --access public 对于非范围包是必需的
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }} # 使用之前设置的 npm 令牌进行认证
